@@ -1,0 +1,16 @@
+#cloud-config
+package_update: true
+package_upgrade: true
+packages:
+  - httpd
+  - php
+  - php-mysqlnd
+  - wget
+
+runcmd:
+  - systemctl enable httpd
+  - systemctl start httpd
+  - wget https://wordpress.org/latest.tar.gz -P /tmp
+  - tar -xzf /tmp/latest.tar.gz -C /var/www/html --strip-components=1
+  - chown -R apache:apache /var/www/html
+  - systemctl restart httpd
