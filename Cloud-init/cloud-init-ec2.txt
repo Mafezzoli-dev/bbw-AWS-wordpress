@@ -14,3 +14,6 @@ runcmd:
   - tar -xzf /tmp/latest.tar.gz -C /var/www/html --strip-components=1
   - chown -R apache:apache /var/www/html
   - systemctl restart httpd
+  - curl -O https://wordpress.org/latest.tar.gz
+  - tar -xzf latest.tar.gz
+  - ls
