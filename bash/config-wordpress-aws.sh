@@ -1,26 +1,20 @@
 #!/bin/bash
 
-# Exit on any error
-set -e
+read -p "Endpoint: " MYSQL_HOST
+read -p "MySQL Benutzer: " MYSQL_USER
+read -sp "MySQL Passwort: " MYSQL_PASSWORD
+echo 
+wordpress=DB_NAME
+read -p "Benutzernamen neue Datenbank: " DB_USER
+read -sp "Passwort neuen Benutzer: " DB_USER_PASSWORD
 
-# Abfrage der Infos
-read -p "MySql host (Endpoint): " MYSQL_HOST
-read -p "MySql User: " MYSQL_USER
-read -s -p "Erstelle ein Passwort fuer den wordpress user " MYSQL_PASSWORD
-echo
-read -p "Gib ein sicheres Passwort für den WordPress Benutzer ein: " WORDPRESS_PASSWORD
-
-echo "Exportieren von MySQL Host"
-export MYSQL_HOST="$MYSQL_HOST"
-
-# Verbindung zu MySQL herstellen und Konfiguration ausführen
-echo "Verbinde zu MySQL und konfiguriere Datenbank und Benutzer..."
 mysql --host="$MYSQL_HOST" --user="$MYSQL_USER" --password="$MYSQL_PASSWORD" <<EOF
-CREATE DATABASE IF NOT EXISTS wordpress;
-CREATE USER 'wordpress' IDENTIFIED BY '$WORDPRESS_PASSWORD';
-GRANT ALL PRIVILEGES ON wordpress.* TO 'wordpress';
+CREATE DATABASE IF NOT EXISTS $DB_NAME;
+CREATE USER IF NOT EXISTS '$DB_USER'@'%' IDENTIFIED BY '$DB_USER_PASSWORD';
+GRANT ALL PRIVILEGES ON $DB_NAME.* TO '$DB_USER'@'%';
 FLUSH PRIVILEGES;
 EXIT;
 EOF
 
-echo "Konfiguration abgeschlossen"
+# Pause nach der Ausführung der SQL-Befehle
+echo "Datenbank und Benutzer wurden erfolgreich erstellt."
